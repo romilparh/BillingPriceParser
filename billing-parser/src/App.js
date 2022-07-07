@@ -70,7 +70,12 @@ function App() {
       for (var i = 0; i < countryNameArray.length; i++) {
         var cityCodeSubArray = cityCodeArray[i].split(",");
         for (var j = 0; j < cityCodeSubArray.length; j++) {
-          var pattern = countryCodeArray[i] + cityCodeSubArray[j];
+          var pattern;
+          if(cityCodeSubArray[j] === 'NA') {
+            pattern = countryCodeArray[i]
+          } else {
+            pattern = countryCodeArray[i] + cityCodeSubArray[j];
+          }
           var entryDisplayName =
             displayName + " " + countryNameArray[i] + " - " + pattern;
           const entry = [
