@@ -90,6 +90,7 @@ function App() {
     <div className={cssClasses.root}>
       <div id="input-form" className={cssClasses.inputForm}>
         <TextField
+          multiline
           className={cssClasses.inputWidth}
           id="country-name"
           label="Country Name"
@@ -99,6 +100,7 @@ function App() {
           }}
         />
         <TextField
+          multiline
           className={cssClasses.inputWidth}
           id="country-code"
           label="Country Code"
@@ -118,6 +120,7 @@ function App() {
           }}
         />
         <TextField
+          multiline
           className={cssClasses.inputWidth}
           id="price"
           label="Price"
