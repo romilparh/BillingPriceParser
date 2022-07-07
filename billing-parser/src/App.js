@@ -56,30 +56,16 @@ function App() {
   var patternEntries = [];
 
   const addEntries = () => {
-    console.log(countryNames);
-    console.log(countryCodes);
-    console.log(cityCodes);
-    console.log(prices);
-    console.log(displayName);
     var countryNameArray = countryNames.split(";");
     var countryCodeArray = countryCodes.split(";");
     var cityCodeArray = cityCodes.split(";");
     var priceArray = prices.split(";");
-    console.log(countryNameArray);
-    console.log(countryCodeArray);
-    console.log(cityCodeArray);
-    console.log(priceArray);
 
     // Sort Country Entries
     if (countryCodeArray.length === cityCodeArray.length) {
       // Make Pattern Data
       for (var i = 0; i < countryNameArray.length; i++) {
-        console.log(countryNames[i]);
-        console.log(countryCodeArray[i]);
-        console.log(cityCodes[i]);
-        console.log(prices[i]);
         var cityCodeSubArray = cityCodeArray[i].split(",");
-        console.log(cityCodeSubArray);
         for (var j = 0; j < cityCodeSubArray.length; j++) {
           var pattern = countryCodeArray[i] + cityCodeSubArray[j];
           var entryDisplayName =
@@ -96,7 +82,7 @@ function App() {
       setFinalPattern(patternEntries);
       setProcessingDone(true);
     } else {
-      console.log("Count not good");
+      console.error("Count not good");
     }
   };
 
