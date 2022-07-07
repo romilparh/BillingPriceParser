@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { makeStyles } from "@mui/styles";
 import Button from "@mui/material/Button";
+import { CSVLink } from "react-csv";
 
 const useStyles = makeStyles({
   root: {
@@ -38,33 +39,65 @@ const useStyles = makeStyles({
     justifyContent: "space-between",
     gridGap: "20px",
     color: "white",
-    width: "50%"
-  }
+    width: "50%",
+  },
 });
 
 function App() {
   const cssClasses = useStyles();
-  const [countryCode, setCountryCode] = useState("");
-  const [cityCode, setCityCode] = useState("");
-  const [price, setPrice] = useState("");
+  const [countryNames, setCountryNames] = useState([]);
+  const [countryCodes, setCountryCodes] = useState([]);
+  const [cityCodes, setCityCodes] = useState([]);
+  const [prices, setPrices] = useState([]);
+  const [displayName, setDisplayName] = useState("");
   const [finalPattern, setFinalPattern] = useState([]);
-  var cityCodes = [];
-  var pattern = [];
+  const [processingDone, setProcessingDone] = useState(false);
 
-  const convertData = () => {
-    cityCodes = cityCode.split(",");
-    // Make Pattern
-    for (var i = 0; i < cityCodes.length; i++) {
-      // Push to pattern
-      pattern.push({
-        key: countryCode + cityCodes[i],
-        value: {
-          code: countryCode + cityCodes[i],
-          price: price,
-        },
-      });
+  var patternEntries = [];
+
+  const addEntries = () => {
+    console.log(countryNames);
+    console.log(countryCodes);
+    console.log(cityCodes);
+    console.log(prices);
+    console.log(displayName);
+    var countryNameArray = countryNames.split(";");
+    var countryCodeArray = countryCodes.split(";");
+    var cityCodeArray = cityCodes.split(";");
+    var priceArray = prices.split(";");
+    console.log(countryNameArray);
+    console.log(countryCodeArray);
+    console.log(cityCodeArray);
+    console.log(priceArray);
+
+    // Sort Country Entries
+    if (countryCodeArray.length === cityCodeArray.length) {
+      // Make Pattern Data
+      for (var i = 0; i < countryNameArray.length; i++) {
+        console.log(countryNames[i]);
+        console.log(countryCodeArray[i]);
+        console.log(cityCodes[i]);
+        console.log(prices[i]);
+        var cityCodeSubArray = cityCodeArray[i].split(",");
+        console.log(cityCodeSubArray);
+        for (var j = 0; j < cityCodeSubArray.length; j++) {
+          var pattern = countryCodeArray[i] + cityCodeSubArray[j];
+          var entryDisplayName =
+            displayName + " " + countryNameArray[i] + " - " + pattern;
+          const entry = [
+            countryNameArray[i],
+            pattern,
+            priceArray[i],
+            entryDisplayName,
+          ];
+          patternEntries.push(entry);
+        }
+      }
+      setFinalPattern(patternEntries);
+      setProcessingDone(true);
+    } else {
+      console.log("Count not good");
     }
-    setFinalPattern(pattern);
   };
 
   return (
@@ -72,11 +105,20 @@ function App() {
       <div id="input-form" className={cssClasses.inputForm}>
         <TextField
           className={cssClasses.inputWidth}
+          id="country-name"
+          label="Country Name"
+          value={countryNames}
+          onChange={(e) => {
+            setCountryNames(e.target.value.replace(/ /g, ""));
+          }}
+        />
+        <TextField
+          className={cssClasses.inputWidth}
           id="country-code"
           label="Country Code"
-          value={countryCode}
+          value={countryCodes}
           onChange={(e) => {
-            setCountryCode(e.target.value.replace(/ /g, ""));
+            setCountryCodes(e.target.value.replace(/ /g, ""));
           }}
         />
         <TextField
@@ -84,41 +126,41 @@ function App() {
           multiline
           id="city-code"
           label="City Code"
-          value={cityCode}
+          value={cityCodes}
           onChange={(e) => {
-            setCityCode(e.target.value.replace(/ /g, ""));
+            setCityCodes(e.target.value.replace(/ /g, ""));
           }}
         />
         <TextField
           className={cssClasses.inputWidth}
           id="price"
           label="Price"
-          value={price}
+          value={prices}
           onChange={(e) => {
-            setPrice(e.target.value.replace(/ /g, ""));
+            setPrices(e.target.value.replace(/ /g, ""));
+          }}
+        />
+        <TextField
+          className={cssClasses.inputWidth}
+          id="displayName"
+          label="Service Display Name"
+          value={displayName}
+          onChange={(e) => {
+            setDisplayName(e.target.value.replace(/ /g, ""));
           }}
         />
         <Button
           variant="contained"
           className={cssClasses.inputWidth}
-          onClick={convertData}
+          onClick={addEntries}
         >
           Convert Data
         </Button>
-      </div>
-      <div className={cssClasses.patternOutput}>
-      <div className={cssClasses.patternData} >
-              <div>Code</div>
-              <div>Price</div>
-            </div>
-        {finalPattern.map((pattern) => {
-          return (
-            <div key={pattern.key} className={cssClasses.patternData} >
-              <div>{pattern.value.code}</div>
-              <div>{pattern.value.price}</div>
-            </div>
-          );
-        })}
+        {processingDone && (
+          <>
+            <CSVLink data={finalPattern}>Download me</CSVLink>
+          </>
+        )}
       </div>
     </div>
   );
