@@ -56,6 +56,9 @@ function App() {
   var patternEntries = [];
 
   const addEntries = () => {
+    // Add Header Entry to CSV
+    patternEntries.push(["Country","Pattern","Amount","DisplayName"]);
+    // Start
     var countryNameArray = countryNames.split(";");
     var countryCodeArray = countryCodes.split(";");
     var cityCodeArray = cityCodes.split(";");
